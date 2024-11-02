@@ -18,7 +18,11 @@ pipeline {
         stage('Run Spring Boot App') {
             steps {
                 dir('springboot-app') {
-                    sh 'nohup java -jar target/*.jar &'
+                    sh '''
+                        nohup java -jar target/*.jar > nohup.out 2>&1 &
+                        sleep 5
+                        cat nohup.out
+                    '''
                 }
             }
         }
