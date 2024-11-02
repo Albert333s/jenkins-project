@@ -21,12 +21,13 @@ services:
     user: root
 
   jenkins-slave-be:
-    image: jenkins/inbound-agent
+    build: ./jenkins-slave-be
     container_name: jenkins-slave-be
     environment:
       - JENKINS_URL=http://jenkins-master:8080
       - JENKINS_AGENT_NAME=slave-be
       - JENKINS_SECRET=e3f1669e45795da04f03938585bcfca22e73ba47980c7b617a4e243e832e28a6
+    user: root
 
 volumes:
   jenkins_home:

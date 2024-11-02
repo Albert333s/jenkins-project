@@ -1,0 +1,18 @@
+pipeline {
+    agent { label 'backend' }
+    stages {
+        stage('Clone Repository') {
+            steps {
+                git url: 'https://github.com/Albert333s/jenkins-project.git', branch: 'main'
+            }
+        }
+
+        stage('Build Spring Boot App') {
+            steps {
+                dir('springboot-app') {
+                    sh 'mvn clean package -DskipTests'
+                }
+            }
+        }
+    }
+}
