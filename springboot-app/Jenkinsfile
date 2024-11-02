@@ -14,5 +14,13 @@ pipeline {
                 }
             }
         }
+
+        stage('Run Spring Boot App') {
+            steps {
+                dir('springboot-app') {
+                    sh 'nohup java -jar target/*.jar &'
+                }
+            }
+        }
     }
 }
