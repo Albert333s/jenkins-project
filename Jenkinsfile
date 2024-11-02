@@ -1,5 +1,5 @@
 pipeline {
-    agent { label 'slave-fe' } // Chạy pipeline trên node slave-fe
+    agent { label 'frontend' } // Chạy pipeline trên node slave-fe
     stages {
         stage('Clone Repository') {
             steps {
