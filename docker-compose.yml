@@ -1,51 +1,27 @@
-version: "3.8"
-
-networks:
-  jenkins_network:
-    driver: bridge
-
 services:
   jenkins-master:
-    image: jenkins/jenkins:lts
+    build: ./jenkins
     container_name: jenkins-master
     ports:
       - "8080:8080"
       - "50000:50000"
     volumes:
       - jenkins_home:/var/jenkins_home
-    environment:
-      JENKINS_ADMIN_ID: admin
-      JENKINS_ADMIN_PASSWORD: admin_password
-    networks:
-      - jenkins_network
+      - /var/run/docker.sock:/var/run/docker.sock
 
-  react-slave:
-    image: jenkins/inbound-agent
-    container_name: react-slave
+  jenkins-slave-fe:
+    image: jenkins/inbound-agent # Image của Jenkins slave agent
+    container_name: jenkins-slave-fe
     environment:
       - JENKINS_URL=http://jenkins-master:8080
-      - JENKINS_AGENT_NAME=react-slave
-      - JENKINS_AGENT_WORKDIR=/home/jenkins/agent
-      - JENKINS_SECRET=<Replace_with_React_Slave_Secret>
-    volumes:
-      - react_slave_home:/home/jenkins
-    networks:
-      - jenkins_network
-
-  springboot-slave:
+      - JENKINS_AGENT_NAME=slave-fe
+      - JENKINS_SECRET=ce7d975857b1168357c501571137c44e8eac8bd331e56ff4a704785d876ed1ce
+  jenkins-slave-be:
     image: jenkins/inbound-agent
-    container_name: springboot-slave
+    container_name: jenkins-slave-be
     environment:
       - JENKINS_URL=http://jenkins-master:8080
-      - JENKINS_AGENT_NAME=springboot-slave
-      - JENKINS_AGENT_WORKDIR=/home/jenkins/agent
-      - JENKINS_SECRET=<Replace_with_SpringBoot_Slave_Secret>
-    volumes:
-      - springboot_slave_home:/home/jenkins
-    networks:
-      - jenkins_network
-
+      - JENKINS_AGENT_NAME=slave-be
+      - JENKINS_SECRET=e3f1669e45795da04f03938585bcfca22e73ba47980c7b617a4e243e832e28a6
 volumes:
   jenkins_home:
-  react_slave_home:
-  springboot_slave_home:
