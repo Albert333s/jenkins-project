@@ -18,6 +18,7 @@ services:
       - JENKINS_SECRET=ce7d975857b1168357c501571137c44e8eac8bd331e56ff4a704785d876ed1ce
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+    user: root
 
   jenkins-slave-be:
     image: jenkins/inbound-agent

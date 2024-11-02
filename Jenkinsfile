@@ -10,8 +10,8 @@ pipeline {
         stage('Cài đặt Node.js') {
             steps {
                 sh '''
-                    sudo apt-get update
-                    sudo apt-get install -y nodejs
+                    apt-get update
+                    apt-get install -y nodejs
                 '''
             }
         }
