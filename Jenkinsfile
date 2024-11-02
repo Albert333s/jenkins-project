@@ -14,11 +14,8 @@ pipeline {
                     ls
                     cd react-app
                     ls
-                    docker -v
-                    docker build -t react-app:latest .
-                    docker stop react-app || true
-                    docker rm react-app || true
-                    docker run -d -p 3000:3000 --name react-app react-app:latest
+                    npm install
+                    npm start
                 '''
             }
         }
