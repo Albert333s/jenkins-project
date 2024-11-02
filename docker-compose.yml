@@ -10,7 +10,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
 
   jenkins-slave-fe:
-    image: jenkins/inbound-agent # Image của Jenkins slave agent
+    build: ./jenkins-slave-fe
     container_name: jenkins-slave-fe
     environment:
       - JENKINS_URL=http://jenkins-master:8080
@@ -27,5 +27,6 @@ services:
       - JENKINS_URL=http://jenkins-master:8080
       - JENKINS_AGENT_NAME=slave-be
       - JENKINS_SECRET=e3f1669e45795da04f03938585bcfca22e73ba47980c7b617a4e243e832e28a6
+
 volumes:
   jenkins_home:
