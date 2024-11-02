@@ -11,6 +11,8 @@ pipeline {
             steps {
                 // Build Docker image và chạy container trực tiếp trên node slave-fe
                 sh '''
+                    pwd
+                    cd react-app
                     docker build -t react-app:latest .
                     docker stop react-app || true
                     docker rm react-app || true
