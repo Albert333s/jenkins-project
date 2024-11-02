@@ -1,5 +1,5 @@
 pipeline {
-    agent { label 'frontend' } // Chạy pipeline trên node slave-fe
+    agent { label 'frontend' }
     stages {
         stage('Clone Repository') {
             steps {
@@ -7,12 +7,18 @@ pipeline {
             }
         }
         
-        stage('Build và chạy ứng dụng') {
+        stage('Check Node') {
+            steps {
+                sh 'echo "Running on $(hostname)"'
+            }
+        }
+
+        stage('Build ứng dụng') {
             steps {
                 sh '''
                     cd react-app
                     npm install
-                    nohup npm start &
+                    npm run build
                 '''
             }
         }
