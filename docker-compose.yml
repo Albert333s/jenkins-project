@@ -16,6 +16,9 @@ services:
       - JENKINS_URL=http://jenkins-master:8080
       - JENKINS_AGENT_NAME=slave-fe
       - JENKINS_SECRET=ce7d975857b1168357c501571137c44e8eac8bd331e56ff4a704785d876ed1ce
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
   jenkins-slave-be:
     image: jenkins/inbound-agent
     container_name: jenkins-slave-be
