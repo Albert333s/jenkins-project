@@ -1,5 +1,5 @@
 # Use the Jenkins inbound agent as a base image
-FROM jenkins/inbound-agent:lts
+FROM jenkins/inbound-agent
 
 # Switch to root user to install dependencies
 USER root
