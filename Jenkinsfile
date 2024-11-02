@@ -13,6 +13,8 @@ pipeline {
                 sh '''
                     ls
                     cd react-app
+                    ls
+                    docker -v
                     docker build -t react-app:latest .
                     docker stop react-app || true
                     docker rm react-app || true
