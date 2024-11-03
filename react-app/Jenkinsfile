@@ -6,16 +6,6 @@ pipeline {
                 script {
                     // Kiểm tra và giải phóng cổng 3000 nếu container nào đó đang sử dụng
                     sh '''
-                        if [ $(docker ps -q -f "publish=3000") ]; then
-                            docker ps -q -f "publish=3000" | xargs docker stop
-                        fi
-
-                        # Clean up any existing container with the same name
-                        if [ $(docker ps -a -q -f name=react-app-container) ]; then
-                            docker rm -f react-app-container
-                        fi
-                        
-                        # Clean up any dangling images
                         docker image prune -f
                         docker container prune -f
                     '''
@@ -46,7 +36,7 @@ pipeline {
                 script {
                     // Running Docker container and exposing it to port 3000
                     sh '''
-                        docker run -d -p 3000:3000 --name react-app-container react-app-image
+                        docker run -d -p 3001:3000 --name react-app-container react-app-image
                     '''
                 }
             }
