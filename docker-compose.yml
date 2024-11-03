@@ -19,8 +19,6 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     user: root
-    ports:
-      - "3000:3000"
 
   jenkins-slave-be:
     build: ./jenkins-slave-be

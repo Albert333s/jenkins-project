@@ -4,7 +4,6 @@ pipeline {
         stage('Cleanup') {
             steps {
                 script {
-                    // Kiểm tra và giải phóng cổng 3000 nếu container nào đó đang sử dụng
                     sh '''
                         docker image prune -f
                         docker container prune -f
@@ -22,7 +21,6 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    // Building Docker image
                     sh '''
                         cd react-app
                         docker build -t react-app-image .
@@ -34,9 +32,9 @@ pipeline {
         stage('Run Docker Container') {
             steps {
                 script {
-                    // Running Docker container and exposing it to port 3000
+                    // Running Docker container and exposing it to port 8001 on the host
                     sh '''
-                        docker run -d -p 3000:3000 --name react-app-container react-app-image
+                        docker run -d -p 8001:3000 --name react-app-container react-app-image
                     '''
                 }
             }
@@ -44,9 +42,7 @@ pipeline {
     }
     post {
         always {
-            // Cleanup Docker container after build
             sh 'docker stop react-app-container || true && docker rm react-app-container || true'
-            // Clean up any dangling images after pipeline completes
             sh 'docker image prune -f'
         }
     }
