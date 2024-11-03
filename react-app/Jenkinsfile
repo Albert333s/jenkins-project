@@ -9,7 +9,7 @@ pipeline {
                         if [ $(docker ps -a -q -f name=react-app-container) ]; then
                             docker rm -f react-app-container
                         fi
-                        // Clean up any dangling images
+                        # Clean up any dangling images
                         docker image prune -f
                         docker container prune -f
                     '''
