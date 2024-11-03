@@ -1,6 +1,22 @@
 pipeline {
     agent { label 'frontend' }
     stages {
+        stage('Cleanup') {
+            steps {
+                script {
+                    // Remove any existing container named react-app-container if it exists
+                    sh '''
+                        if [ $(docker ps -a -q -f name=react-app-container) ]; then
+                            docker rm -f react-app-container
+                        fi
+                        // Clean up any dangling images
+                        docker image prune -f
+                        docker container prune -f
+                    '''
+                }
+            }
+        }
+        
         stage('Clone Repository') {
             steps {
                 git url: 'https://github.com/Albert333s/jenkins-project.git', branch: 'main'
@@ -13,11 +29,8 @@ pipeline {
                     // Building Docker image
                     sh '''
                         cd react-app
+                        ls
                         docker build -t react-app-image .
-                        echo "Docker image has been built successfully"
-                        docker images
-                        echo "Docker container"
-                        docker ps -a                                       
                     '''
                 }
             }
@@ -26,13 +39,6 @@ pipeline {
         stage('Run Docker Container') {
             steps {
                 script {
-                    // Remove existing container if it exists
-                    sh '''
-                        if [ $(docker ps -a -q -f name=react-app-container) ]; then
-                            docker rm -f react-app-container
-                        fi
-                    '''
-                    
                     // Running Docker container and exposing it to port 3000
                     sh '''
                         docker run -d -p 3000:3000 --name react-app-container react-app-image
@@ -45,6 +51,8 @@ pipeline {
         always {
             // Cleanup Docker container after build
             sh 'docker stop react-app-container || true && docker rm react-app-container || true'
+            // Clean up any dangling images after pipeline completes
+            sh 'docker image prune -f'
         }
     }
 }
