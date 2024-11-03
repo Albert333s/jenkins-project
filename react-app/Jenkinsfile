@@ -40,10 +40,5 @@ pipeline {
             }
         }
     }
-    post {
-        always {
-            sh 'docker stop react-app-container || true && docker rm react-app-container || true'
-            sh 'docker image prune -f'
-        }
-    }
+    
 }
