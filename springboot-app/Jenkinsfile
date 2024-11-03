@@ -1,27 +1,39 @@
 pipeline {
     agent { label 'backend' }
     stages {
+        stage('Cleanup') {
+            steps {
+                script {
+                    sh '''
+                        docker image prune -f
+                        docker container prune -f
+                    '''
+                }
+            }
+        }
+        
         stage('Clone Repository') {
             steps {
                 git url: 'https://github.com/Albert333s/jenkins-project.git', branch: 'main'
             }
         }
 
-        stage('Build Spring Boot App') {
+        stage('Build Docker Image') {
             steps {
-                dir('springboot-app') {
-                    sh 'mvn clean package -DskipTests'
+                script {
+                    sh '''
+                        cd springboot-app
+                        docker build -t springboot-app-image .
+                    '''
                 }
             }
         }
 
-        stage('Run Spring Boot App') {
+        stage('Run Docker Container') {
             steps {
-                dir('springboot-app') {
+                script {
                     sh '''
-                        nohup java -jar target/*.jar > nohup.out 2>&1 &
-                        sleep 5
-                        cat nohup.out
+                        docker run -d -p 8002:8080 --name springboot-app-container springboot-app-image
                     '''
                 }
             }
