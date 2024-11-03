@@ -6,21 +6,34 @@ pipeline {
                 git url: 'https://github.com/Albert333s/jenkins-project.git', branch: 'main'
             }
         }
-        
-        stage('Check Node') {
+
+        stage('Build Docker Image') {
             steps {
-                sh 'echo "Running on $(hostname)"'
+                script {
+                    // Building Docker image
+                    sh '''
+                        cd react-app
+                        docker build -t react-app-image .
+                    '''
+                }
             }
         }
 
-        stage('Build ứng dụng') {
+        stage('Run Docker Container') {
             steps {
-                sh '''
-                    cd react-app
-                    npm install
-                    npm run build
-                '''
+                script {
+                    // Running Docker container and exposing it to port 3000
+                    sh '''
+                        docker run -d -p 3000:3000 --name react-app-container react-app-image
+                    '''
+                }
             }
+        }
+    }
+    post {
+        always {
+            // Cleanup Docker container after build
+            sh 'docker stop react-app-container || true && docker rm react-app-container || true'
         }
     }
 }

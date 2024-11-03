@@ -1,18 +1,15 @@
-# Use the Jenkins inbound agent as a base image
 FROM jenkins/inbound-agent
 
 # Switch to root user to install dependencies
 USER root
 
-# Install Node.js (version 18) which includes npm
+# Install Node.js (version 18) and Docker in a single RUN command
 RUN apt-get update && \
-    apt-get install -y curl gnupg && \
+    apt-get install -y curl gnupg lsb-release docker.io && \
     curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
     apt-get install -y nodejs && \
-    apt-get clean
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Verify Node.js and npm installations
-RUN node -v && npm -v
 
 # Switch back to the Jenkins user
 USER jenkins

@@ -2,4 +2,5 @@
 FROM jenkins/inbound-agent
 
 USER root
+# Install Maven
 RUN apt-get update && apt-get install -y maven
