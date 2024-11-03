@@ -1,26 +1,26 @@
 # Stage 1: Build the application
 FROM maven:3.8.4-openjdk-17 AS builder
 
-# Đặt thư mục làm việc
+# Set the working directory
 WORKDIR /app
 
-# Copy các file cần thiết để build ứng dụng
-COPY springboot-app/pom.xml .
+# Copy the pom.xml and download dependencies
+COPY pom.xml .
 RUN mvn dependency:go-offline
 
-# Copy source code
-COPY springboot-app /app
+# Copy the source code
+COPY . .
 
-# Build ứng dụng
+# Build the application
 RUN mvn clean package -DskipTests
 
 # Stage 2: Run the application
 FROM openjdk:17-jdk-slim
 
-# Đặt thư mục làm việc
+# Set the working directory
 WORKDIR /app
 
-# Copy file JAR từ build stage sang
+# Copy the JAR file from the build stage
 COPY --from=builder /app/target/*.jar app.jar
 
 # Expose the application port
