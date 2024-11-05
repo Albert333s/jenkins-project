@@ -25,15 +25,19 @@ services:
       - "3000:3000"
 
   jenkins-slave-be:
-    build: ./jenkins-slave-be
+    build:
+      context: .
+      dockerfile: ./jenkins-slave-be/Dockerfile
     container_name: jenkins-slave-be
     environment:
       - JENKINS_URL=http://jenkins-master:8080
       - JENKINS_AGENT_NAME=slave-be
       - JENKINS_SECRET=e3f1669e45795da04f03938585bcfca22e73ba47980c7b617a4e243e832e28a6
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+    privileged: true
     user: root
+    entrypoint: ["/usr/local/bin/dockerd-entrypoint.sh"]
+    ports:
+      - "8002:8002"
 
 volumes:
   jenkins_home:
