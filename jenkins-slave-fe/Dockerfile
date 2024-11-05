@@ -1,15 +1,17 @@
+# Dockerfile for jenkins-slave-fe or jenkins-slave-be
 FROM jenkins/inbound-agent
 
-# Switch to root user to install dependencies
 USER root
-
-# Install Node.js (version 18) and Docker in a single RUN command
 RUN apt-get update && \
-    apt-get install -y curl gnupg lsb-release docker.io && \
-    curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
-    apt-get install -y nodejs && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
+    apt-get install -y docker.io procps && \
+    apt-get clean
+
+# Copy dockerd-entrypoint.sh to the container
+COPY ./jenkins-slave-fe/dockerd-entrypoint.sh /usr/local/bin/dockerd-entrypoint.sh
 
 
-# Switch back to the Jenkins user
-USER jenkins
+# Set executable permission for dockerd-entrypoint.sh
+RUN chmod +x /usr/local/bin/dockerd-entrypoint.sh
+
+# Set entrypoint
+ENTRYPOINT ["/usr/local/bin/dockerd-entrypoint.sh"]

@@ -34,7 +34,7 @@ pipeline {
                 script {
                     // Running Docker container and exposing it to port 8001 on the host
                     sh '''
-                        docker run -d -p 8001:3000 --name react-app-container react-app-image
+                        docker run -d -p 3000:3000 --name react-app-container react-app-image
                     '''
                 }
             }
