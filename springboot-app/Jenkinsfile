@@ -21,20 +21,32 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    sh '''
+                    
+                    COMMIT_ID = sh(returnStdout: true, script: 'git rev-parse --short=6 HEAD').trim()
+                    IMAGE_TAG = "minhdv8/springboot-app-image:${COMMIT_ID}" 
+                    
+                    echo "COMMIT_ID: ${COMMIT_ID}"
+                    echo "IMAGE_TAG: ${IMAGE_TAG}"
+
+                    sh """
                         cd springboot-app
-                        docker build -t springboot-app-image .
-                    '''
+                        docker build -t ${IMAGE_TAG} .
+                    """
                 }
             }
         }
 
-        stage('Run Docker Container') {
+        stage('Push Docker Image') {
             steps {
                 script {
-                    sh '''
-                        docker run -d -p 8002:8080 --name springboot-app-container springboot-app-image
-                    '''
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                        echo "DOCKER_USER: ${DOCKER_USER}"
+                        sh """
+                            docker login -u $DOCKER_USER -p $DOCKER_PASS
+                            docker push ${IMAGE_TAG}
+                            docker logout
+                        """
+                    }
                 }
             }
         }
