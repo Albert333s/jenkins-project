@@ -21,24 +21,29 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
+                    COMMIT_ID = sh(returnStdout: true, script: 'git rev-parse --short=6 HEAD').trim()
+                    IMAGE_TAG = "minhdv8/react-app-image:${COMMIT_ID}"
+                    
                     sh '''
                         cd react-app
-                        docker build -t react-app-image .
+                        docker build -t ${IMAGE_TAG} .
                     '''
                 }
             }
         }
 
-        stage('Run Docker Container') {
+        stage('Push Docker Image') {
             steps {
                 script {
-                    // Running Docker container and exposing it to port 8001 on the host
-                    sh '''
-                        docker run -d -p 3000:3000 --name react-app-container react-app-image
-                    '''
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                        sh '''
+                            docker login -u $DOCKER_USER -p $DOCKER_PASS
+                            docker push ${IMAGE_TAG}
+                            docker logout
+                        '''
+                    }
                 }
             }
         }
     }
-    
 }

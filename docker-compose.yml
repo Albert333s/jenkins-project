@@ -17,7 +17,7 @@ services:
     environment:
       - JENKINS_URL=http://jenkins-master:8080
       - JENKINS_AGENT_NAME=slave-fe
-      - JENKINS_SECRET=ce7d975857b1168357c501571137c44e8eac8bd331e56ff4a704785d876ed1ce
+      - JENKINS_SECRET=cebee59e687e65ae5075c20f854d1c61eb769cf618e8729aeb19fa4fa53ea462
     privileged: true
     user: root
     entrypoint: ["/usr/local/bin/dockerd-entrypoint.sh"]
@@ -32,7 +32,7 @@ services:
     environment:
       - JENKINS_URL=http://jenkins-master:8080
       - JENKINS_AGENT_NAME=slave-be
-      - JENKINS_SECRET=e3f1669e45795da04f03938585bcfca22e73ba47980c7b617a4e243e832e28a6
+      - JENKINS_SECRET=0e62725ebdc3fee6af1282f647a95511e8ca5d9fe1721ffe0bd16c212db37ee8
     privileged: true
     user: root
     entrypoint: ["/usr/local/bin/dockerd-entrypoint.sh"]
