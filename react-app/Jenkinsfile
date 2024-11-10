@@ -27,10 +27,10 @@ pipeline {
                     echo "COMMIT_ID: ${COMMIT_ID}"
                     echo "IMAGE_TAG: ${IMAGE_TAG}"
 
-                    sh '''
+                    sh """
                         cd react-app
                         docker build -t ${IMAGE_TAG} .
-                    '''
+                    """
                 }
             }
         }
@@ -40,12 +40,11 @@ pipeline {
                 script {
                     withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                         echo "DOCKER_USER: ${DOCKER_USER}"
-                        echo "DOCKER_PASS: ${DOCKER_PASS}"
-                        sh '''
+                        sh """
                             docker login -u $DOCKER_USER -p $DOCKER_PASS
                             docker push ${IMAGE_TAG}
                             docker logout
-                        '''
+                        """
                     }
                 }
             }
