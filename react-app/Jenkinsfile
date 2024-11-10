@@ -24,6 +24,9 @@ pipeline {
                     COMMIT_ID = sh(returnStdout: true, script: 'git rev-parse --short=6 HEAD').trim()
                     IMAGE_TAG = "minhdv8/react-app-image:${COMMIT_ID}"
                     
+                    echo "COMMIT_ID: ${COMMIT_ID}"
+                    echo "IMAGE_TAG: ${IMAGE_TAG}"
+
                     sh '''
                         cd react-app
                         docker build -t ${IMAGE_TAG} .
@@ -36,6 +39,8 @@ pipeline {
             steps {
                 script {
                     withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                        echo "DOCKER_USER: ${DOCKER_USER}"
+                        echo "DOCKER_PASS: ${DOCKER_PASS}"
                         sh '''
                             docker login -u $DOCKER_USER -p $DOCKER_PASS
                             docker push ${IMAGE_TAG}
